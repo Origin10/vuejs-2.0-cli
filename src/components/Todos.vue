@@ -1,0 +1,43 @@
+
+<template lang="pug">
+#todos
+	//- 為了配合 name:'todos',
+	ul.list-group(v-if="todos.length>0")
+		li.list-group-item(
+			v-for='(todo, index) in todos'
+			v-bind:class="{'completed' : todo.completed}")
+			router-link(:to="{name:'todo',params:{id:todo.id}}") {{todo.title}}
+			button.btn.btn-sm.btn-warning(
+				v-on:click='deleteTodo(index)', style='float:right') Delete
+			button.btn.btn-sm.pull-right(
+				v-on:click='toggleCompletion(todo)'
+				v-bind:class="[todo.completed ? 'btn-danger':'btn-success']")
+				| {{ todo.completed ? 'Undo':'Completed' }}
+			div(style='clear:both;')
+	todo-form(:todos="todos")
+</template>
+
+<script>
+import TodoForm from './TodoForm'
+export default {
+  name: 'todos',
+  props: ['todos'],
+  methods: {
+    deleteTodo(index) {
+      this.todos.splice(index, 1)
+    },
+    toggleCompletion(todo) {
+      todo.completed = !todo.completed
+    }
+  },
+  components: {
+    TodoForm
+  }
+}
+</script>
+<style>
+.completed {
+  color: #8ed1d4;
+  text-decoration: line-through;
+}
+</style>
