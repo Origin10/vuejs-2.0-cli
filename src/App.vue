@@ -5,7 +5,7 @@
 	//- Todos(:todos="todos")
 	//- todo-form(:todos="todos")
 
-	router-view(:todos="todos")
+	router-view
 </template>
 
 <script>
@@ -15,20 +15,22 @@ import TodoForm from './components/TodoForm'
 
 export default {
   name: 'App',
-  data() {
-    return {
-      todos: []
-    }
-  },
+  // data() {
+  //   return {
+  //     todos: []
+  //   }
+  // },
   mounted() {
-    this.axios.get('http://localhost/jugze/public/api/todos').then(response => {
-      this.todos = response.data;
-      console.log(response.data)
-    })
+    // this.axios.get('http://localhost/jugze/public/api/todos').then(response => {
+    //   this.todos = response.data;
+    //   console.log(response.data)
+    // }) 已經交給main裡面的store 處理
+    this.$store.dispatch('getTodos')
+
   },
   computed: {
     todoCount() {
-      return this.todos.length;
+      return this.$store.state.todos.length;
     }
   },
   components: {

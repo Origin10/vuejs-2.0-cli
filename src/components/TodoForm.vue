@@ -21,10 +21,17 @@ export default {
   },
   methods: {
     addTodo(newTodo) {
-      this.todos.push(newTodo)
+      this.axios.post('http://localhost/jugze/public/api/todo/create', {
+        title: this.newTodo.title
+      }).then(response => {
+        console.log(response.data)
+        this.todos.push(response.data)
+      })
+
       this.newTodo = {
         id: null,
-        title: ''
+        title: '',
+        completed: false
       }
     }
   }

@@ -2,32 +2,44 @@
 <template lang="pug">
 #todos
 	//- 為了配合 name:'todos',
-	ul.list-group(v-if="todos.length>0")
+	ul.list-group
 		li.list-group-item(
 			v-for='(todo, index) in todos'
 			v-bind:class="{'completed' : todo.completed}")
 			router-link(:to="{name:'todo',params:{id:todo.id}}") {{todo.title}}
 			button.btn.btn-sm.btn-warning(
-				v-on:click='deleteTodo(index)', style='float:right') Delete
+				v-on:click='deleteTodo(index,todo)', style='float:right') Delete
 			button.btn.btn-sm.pull-right(
 				v-on:click='toggleCompletion(todo)'
 				v-bind:class="[todo.completed ? 'btn-danger':'btn-success']")
 				| {{ todo.completed ? 'Undo':'Completed' }}
 			div(style='clear:both;')
-	todo-form(:todos="todos")
+	todo-form
 </template>
 
 <script>
 import TodoForm from './TodoForm'
 export default {
   name: 'todos',
-  props: ['todos'],
+  computed: {
+		todos(){
+			return this.$store.state.todos
+		}
+  },
+  // props: ['todos'],
   methods: {
-    deleteTodo(index) {
-      this.todos.splice(index, 1)
+    deleteTodo(index, todo) {
+      this.axios.delete('http://localhost/jugze/public/api/todo/' + todo.id + '/delete').then(response => {
+        console.log(response.data)
+        this.todos.splice(index, 1)
+      })
     },
     toggleCompletion(todo) {
-      todo.completed = !todo.completed
+      this.axios.patch('http://localhost/jugze/public/api/todo/' + todo.id + '/completed').then(response => {
+        console.log(response.data)
+        todo.completed = !todo.completed
+      })
+      // 更新一個資源
     }
   },
   components: {
