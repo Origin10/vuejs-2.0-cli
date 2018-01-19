@@ -9,30 +9,35 @@ form(v-on:submit.prevent='addTodo(newTodo)')
 </template>
 <script>
 export default {
-  props: ['todos'],
-  data() {
-    return {
-      newTodo: {
-        id: null,
-        title: '',
-        completed: false
-      }
+  // props: ['todos'],
+  // data() {
+  //   return {
+  //     newTodo: {
+  //       id: null,
+  //       title: '',
+  //       completed: false
+  //     }
+  //   }
+  computed: {
+    newTodo() {
+      return this.$store.state.newTodo //等於在main.js定義的
     }
   },
   methods: {
     addTodo(newTodo) {
-      this.axios.post('http://localhost/jugze/public/api/todo/create', {
-        title: this.newTodo.title
-      }).then(response => {
-        console.log(response.data)
-        this.todos.push(response.data)
-      })
+      // this.axios.post('http://localhost/jugze/public/api/todo/create', {
+      //   title: this.newTodo.title
+      // }).then(response => {
+      //   console.log(response.data)
+      //   this.todos.push(response.data)
+      // })
+			this.$store.dispatch('saveTodo', newTodo)
 
-      this.newTodo = {
-        id: null,
-        title: '',
-        completed: false
-      }
+      // this.newTodo = {
+      //   id: null,
+      //   title: '',
+      //   completed: false
+      // }
     }
   }
 }
